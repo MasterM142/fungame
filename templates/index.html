@@ -1,0 +1,236 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12 text-center mb-5">
+        <h1 class="display-4 fw-bold mb-3">
+            <span class="gradient-text">🎰 Willkommen bei FunGames</span>
+        </h1>
+        <p class="lead text-secondary">Das ultimative Casino-Erlebnis mit virtuellen Credits</p>
+    </div>
+</div>
+
+{% if user %}
+<!-- User Dashboard -->
+<div class="row mb-5">
+    <div class="col-md-3">
+        <div class="card stats-card">
+            <div class="card-body text-center">
+                <div class="stats-icon mb-3">
+                    <i class="fas fa-wallet fa-2x text-success"></i>
+                </div>
+                <h3 class="fw-bold text-success">{{ "%.2f"|format(user.balance) }}</h3>
+                <p class="text-secondary mb-0">Credits</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stats-card">
+            <div class="card-body text-center">
+                <div class="stats-icon mb-3">
+                    <i class="fas fa-chart-line fa-2x text-primary"></i>
+                </div>
+                <h3 class="fw-bold text-primary">{{ "%.2f"|format(user.total_won) }}</h3>
+                <p class="text-secondary mb-0">Total Won</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stats-card">
+            <div class="card-body text-center">
+                <div class="stats-icon mb-3">
+                    <i class="fas fa-dice fa-2x text-warning"></i>
+                </div>
+                <h3 class="fw-bold text-warning">{{ user.games_played }}</h3>
+                <p class="text-secondary mb-0">Games Played</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stats-card">
+            <div class="card-body text-center">
+                <div class="stats-icon mb-3">
+                    <i class="fas fa-trophy fa-2x text-info"></i>
+                </div>
+                <h3 class="fw-bold text-info">{{ "%.2f"|format(user.total_won - user.total_wagered) }}</h3>
+                <p class="text-secondary mb-0">Profit</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Games Section -->
+<div class="row mb-5">
+    <div class="col-12">
+        <h2 class="mb-4">
+            <i class="fas fa-gamepad me-2"></i>Spiele
+        </h2>
+    </div>
+    
+    <div class="col-lg-4 col-md-6 mb-4">
+        <div class="card game-card h-100">
+            <div class="card-body text-center p-4">
+                <div class="game-icon mb-4">
+                    <i class="fas fa-bomb fa-4x text-danger"></i>
+                </div>
+                <h4 class="card-title fw-bold mb-3">💣 Mines</h4>
+                <p class="card-text text-secondary mb-4">
+                    Finde die Diamanten und vermeide die Minen! 
+                    Jeder gefundene Diamant erhöht deinen Multiplier.
+                </p>
+                <div class="game-stats mb-4">
+                    <div class="row text-center">
+                        <div class="col-4">
+                            <small class="text-secondary">Min Bet</small>
+                            <div class="fw-bold">1.00</div>
+                        </div>
+                        <div class="col-4">
+                            <small class="text-secondary">Max Win</small>
+                            <div class="fw-bold text-success">37,065x</div>
+                        </div>
+                        <div class="col-4">
+                            <small class="text-secondary">RTP</small>
+                            <div class="fw-bold text-info">97%</div>
+                        </div>
+                    </div>
+                </div>
+                <a href="/mines" class="btn btn-primary btn-lg w-100" style="text-decoration: none;">
+                    <i class="fas fa-play me-2"></i>Jetzt Spielen
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4 col-md-6 mb-4">
+        <div class="card game-card h-100">
+            <div class="card-body text-center p-4">
+                <div class="game-icon mb-4">
+                    <i class="fas fa-dice fa-4x text-warning"></i>
+                </div>
+                <h4 class="card-title fw-bold mb-3">🎲 Dice</h4>
+                <p class="card-text text-secondary mb-4">
+                    Würfel dein Glück! Setze auf über oder unter und 
+                    gewinne mit den richtigen Vorhersagen.
+                </p>
+                <div class="game-stats mb-4">
+                    <div class="row text-center">
+                        <div class="col-4">
+                            <small class="text-secondary">Min Bet</small>
+                            <div class="fw-bold">1.00</div>
+                        </div>
+                        <div class="col-4">
+                            <small class="text-secondary">Max Win</small>
+                            <div class="fw-bold text-success">9,900x</div>
+                        </div>
+                        <div class="col-4">
+                            <small class="text-secondary">RTP</small>
+                            <div class="fw-bold text-info">99%</div>
+                        </div>
+                    </div>
+                </div>
+                <a href="/dice" class="btn btn-primary btn-lg w-100" style="text-decoration: none;">
+                    <i class="fas fa-play me-2"></i>Jetzt Spielen
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4 col-md-6 mb-4">
+        <div class="card game-card h-100">
+            <div class="card-body text-center p-4">
+                <div class="game-icon mb-4">
+                    <i class="fas fa-spade fa-4x text-light"></i>
+                </div>
+                <h4 class="card-title fw-bold mb-3">🃏 Blackjack</h4>
+                <p class="card-text text-secondary mb-4">
+                    Schlage den Dealer! Komme so nah wie möglich 
+                    an 21 heran ohne zu überziehen.
+                </p>
+                <div class="game-stats mb-4">
+                    <div class="row text-center">
+                        <div class="col-4">
+                            <small class="text-secondary">Min Bet</small>
+                            <div class="fw-bold">1.00</div>
+                        </div>
+                        <div class="col-4">
+                            <small class="text-secondary">Blackjack</small>
+                            <div class="fw-bold text-success">3:2</div>
+                        </div>
+                        <div class="col-4">
+                            <small class="text-secondary">RTP</small>
+                            <div class="fw-bold text-info">99.5%</div>
+                        </div>
+                    </div>
+                </div>
+                <a href="/blackjack" class="btn btn-primary btn-lg w-100" style="text-decoration: none;">
+                    <i class="fas fa-play me-2"></i>Jetzt Spielen
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% else %}
+<!-- Not logged in -->
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card welcome-card">
+            <div class="card-body text-center p-5">
+                <h2 class="mb-4">Willkommen bei FunGames!</h2>
+                <p class="lead text-secondary mb-4">
+                    Registriere dich jetzt und erhalte 1000 Credits zum Spielen!
+                </p>
+                <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                    <a href="/register" class="btn btn-primary btn-lg me-md-2">
+                        <i class="fas fa-user-plus me-2"></i>Jetzt Registrieren
+                    </a>
+                    <a href="/login" class="btn btn-outline-light btn-lg">
+                        <i class="fas fa-sign-in-alt me-2"></i>Bereits Mitglied?
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<style>
+.gradient-text {
+    background: linear-gradient(45deg, var(--accent-primary), var(--accent-secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.stats-card {
+    transition: all 0.3s ease;
+}
+
+.stats-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 212, 255, 0.15);
+}
+
+.game-card {
+    transition: all 0.3s ease;
+}
+
+.game-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 212, 255, 0.2);
+}
+
+.btn {
+    transition: all 0.3s ease !important;
+}
+
+.btn:hover {
+    transform: translateY(-2px) !important;
+}
+
+.welcome-card {
+    background: rgba(37, 43, 61, 0.9);
+    border: 1px solid var(--border-color);
+}
+</style>
+{% endblock %}

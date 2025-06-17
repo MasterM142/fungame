@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Panel{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-shield-alt me-2"></i>Admin Panel
+                </h5>
+            </div>
+            <div class="card-body">
+                <h6 class="mb-3">Benutzer verwalten</h6>
+                
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Benutzername</th>
+                                <th>E-Mail</th>
+                                <th>Guthaben</th>
+                                <th>Gewonnen</th>
+                                <th>Gespielt</th>
+                                <th>Admin</th>
+                                <th>Aktionen</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for u in users %}
+                            <tr>
+                                <td>{{ u.id }}</td>
+                                <td>{{ u.username }}</td>
+                                <td>{{ u.email }}</td>
+                                <td>
+                                    <input type="number" class="form-control form-control-sm balance-input" 
+                                           data-user-id="{{ u.id }}" value="{{ u.balance }}" step="0.01">
+                                </td>
+                                <td>{{ "%.2f"|format(u.total_won) }}</td>
+                                <td>{{ u.games_played }}</td>
+                                <td>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input admin-toggle" type="checkbox" 
+                                               data-user-id="{{ u.id }}" {% if u.is_admin %}checked{% endif %}>
+                                    </div>
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-success save-balance" data-user-id="{{ u.id }}">
+                                        <i class="fas fa-save"></i> Speichern
+                                    </button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Save balance buttons
+    document.querySelectorAll('.save-balance').forEach(button => {
+        button.addEventListener('click', function() {
+            const userId = this.dataset.userId;
+            const balanceInput = document.querySelector(`.balance-input[data-user-id="${userId}"]`);
+            const newBalance = parseFloat(balanceInput.value);
+            
+            if (isNaN(newBalance) || newBalance < 0) {
+                alert('Ungültiger Betrag!');
+                return;
+            }
+            
+            fetch('/admin/update_balance', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    user_id: userId,
+                    balance: newBalance
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Guthaben aktualisiert!');
+                } else {
+                    alert('Fehler: ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Verbindungsfehler');
+            });
+        });
+    });
+    
+    // Admin toggle switches
+    document.querySelectorAll('.admin-toggle').forEach(toggle => {
+        toggle.addEventListener('change', function() {
+            const userId = this.dataset.userId;
+            const isAdmin = this.checked ? 1 : 0;
+            
+            fetch('/admin/toggle_admin', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    user_id: userId,
+                    is_admin: isAdmin
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Admin-Status aktualisiert!');
+                } else {
+                    alert('Fehler: ' + data.error);
+                    // Revert toggle if failed
+                    this.checked = !this.checked;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Verbindungsfehler');
+                // Revert toggle if failed
+                this.checked = !this.checked;
+            });
+        });
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FunGames - {% block title %}Casino{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #1a1f2e;
+            --bg-tertiary: #252b3d;
+            --accent-primary: #00d4ff;
+            --accent-secondary: #7c3aed;
+            --accent-success: #10b981;
+            --accent-danger: #ef4444;
+            --accent-warning: #f59e0b;
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+            --border-color: #334155;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(0, 212, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(124, 58, 237, 0.1) 0%, transparent 50%);
+            z-index: -1;
+            animation: backgroundShift 20s ease-in-out infinite;
+        }
+
+        @keyframes backgroundShift {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* Navbar */
+        .navbar {
+            background: rgba(26, 31, 46, 0.95) !important;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            background: linear-gradient(45deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .navbar-text {
+            color: var(--text-secondary) !important;
+            font-weight: 500;
+        }
+
+        .balance-display {
+            background: linear-gradient(45deg, var(--accent-success), #059669);
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-weight: 600;
+            color: white !important;
+            animation: balanceGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes balanceGlow {
+            0% { box-shadow: 0 0 5px rgba(16, 185, 129, 0.3); }
+            100% { box-shadow: 0 0 20px rgba(16, 185, 129, 0.6); }
+        }
+
+        /* Cards */
+        .card {
+            background: rgba(37, 43, 61, 0.8);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-primary);
+            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.1);
+        }
+
+        .card-header {
+            background: linear-gradient(45deg, var(--accent-primary), var(--accent-secondary));
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 1rem 1.5rem;
+        }
+
+        /* Buttons */
+        .btn {
+            border-radius: 12px;
+            font-weight: 500;
+            padding: 0.75rem 1.5rem;
+            transition: all 0.3s ease;
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 212, 255, 0.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(45deg, var(--accent-success), #059669);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-danger {
+            background: linear-gradient(45deg, var(--accent-danger), #dc2626);
+            color: white;
+        }
+
+        .btn-warning {
+            background: linear-gradient(45deg, var(--accent-warning), #d97706);
+            color: white;
+        }
+
+        /* Form Controls */
+        .form-control, .form-select {
+            background: rgba(37, 43, 61, 0.8);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-primary);
+            padding: 0.75rem 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            background: rgba(37, 43, 61, 0.9);
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 0.2rem rgba(0, 212, 255, 0.25);
+            color: var(--text-primary);
+        }
+
+        .form-label {
+            color: var(--text-secondary);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: var(--accent-primary);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Alerts */
+        .alert {
+            border-radius: 12px;
+            border: none;
+            font-weight: 500;
+        }
+
+        .alert-success {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--accent-success);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .alert-danger {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--accent-danger);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-primary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-secondary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1rem;
+            }
+            
+            .navbar-brand {
+                font-size: 1.25rem;
+            }
+            
+            .balance-display {
+                font-size: 0.9rem;
+                padding: 0.4rem 0.8rem;
+            }
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide-in {
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(0); }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('index') }}">
+                <i class="fas fa-gamepad me-2"></i>FunGames
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <div class="navbar-nav ms-auto align-items-center">
+                    {% if user %}
+                        <span class="navbar-text balance-display me-3">
+                            <i class="fas fa-coins me-1"></i>{{ "%.2f"|format(user.balance) }} Credits
+                        </span>
+                        <span class="navbar-text me-3">
+                            <i class="fas fa-user me-1"></i>{{ user.username }}
+                        </span>
+                        
+                        <!-- Admin-Button - vereinfachte Bedingung -->
+                        {% if user.username == "admin" %}
+                        <a class="nav-link btn btn-outline-warning btn-sm me-2" href="{{ url_for('admin_panel') }}">
+                            <i class="fas fa-shield-alt me-1"></i>Admin
+                        </a>
+                        {% endif %}
+                        
+                        <a class="nav-link btn btn-outline-danger btn-sm" href="{{ url_for('logout') }}">
+                            <i class="fas fa-sign-out-alt me-1"></i>Logout
+                        </a>
+                    {% else %}
+                        <a class="nav-link btn btn-outline-primary btn-sm me-2" href="{{ url_for('login') }}">
+                            <i class="fas fa-sign-in-alt me-1"></i>Login
+                        </a>
+                        <a class="nav-link btn btn-primary btn-sm" href="{{ url_for('register') }}">
+                            <i class="fas fa-user-plus me-1"></i>Register
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4 fade-in">
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- Sound Effects -->
+    <audio id="clickSound" preload="auto">
+        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmHgU7k9n1unEiBC13yO/eizEIHWq+8+OWT" type="audio/wav">
+    </audio>
+    
+    <audio id="winSound" preload="auto">
+        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmHgU7k9n1unEiBC13yO/eizEIHWq+8+OWT" type="audio/wav">
+    </audio>
+    
+    <audio id="loseSound" preload="auto">
+        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmHgU7k9n1unEiBC13yO/eizEIHWq+8+OWT" type="audio/wav">
+    </audio>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Sound effects
+        function playSound(soundId) {
+            const sound = document.getElementById(soundId);
+            if (sound) {
+                sound.currentTime = 0;
+                sound.play().catch(e => console.log('Sound play failed:', e));
+            }
+        }
+
+        // Add click sound to all buttons
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.btn').forEach(btn => {
+                btn.addEventListener('click', () => playSound('clickSound'));
+            });
+        });
+
+        // Toast notification system
+        function showToast(message, type = 'info') {
+            const toastContainer = document.getElementById('toast-container');
+            
+            // Create container if it doesn't exist
+            if (!toastContainer) {
+                const container = document.createElement('div');
+                container.id = 'toast-container';
+                container.className = 'position-fixed bottom-0 end-0 p-3';
+                container.style.zIndex = '1050';
+                document.body.appendChild(container);
+            }
+            
+            const toastId = 'toast-' + Date.now();
+            const toast = document.createElement('div');
+            toast.className = `toast align-items-center text-white bg-${type} border-0`;
+            toast.id = toastId;
+            toast.setAttribute('role', 'alert');
+            toast.setAttribute('aria-live', 'assertive');
+            toast.setAttribute('aria-atomic', 'true');
+            
+            toast.innerHTML = `
+                <div class="d-flex">
+                    <div class="toast-body">
+                        ${message}
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            `;
+            
+            document.getElementById('toast-container').appendChild(toast);
+            
+            const toastElement = new bootstrap.Toast(toast, {
+                autohide: true,
+                delay: 5000
+            });
+            
+            toastElement.show();
+            
+            // Play sound based on type
+            if (type === 'success') {
+                playSound('winSound');
+            } else if (type === 'danger') {
+                playSound('loseSound');
+            }
+        }
+
+        // Loading overlay
+        function showLoading() {
+            let overlay = document.getElementById('loading-overlay');
+            
+            if (!overlay) {
+                overlay = document.createElement('div');
+                overlay.id = 'loading-overlay';
+                overlay.className = 'position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center';
+                overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+                overlay.style.zIndex = '9999';
+                
+                const spinner = document.createElement('div');
+                spinner.className = 'spinner-border text-primary';
+                spinner.setAttribute('role', 'status');
+                
+                const span = document.createElement('span');
+                span.className = 'visually-hidden';
+                span.textContent = 'Loading...';
+                
+                spinner.appendChild(span);
+                overlay.appendChild(spinner);
+                document.body.appendChild(overlay);
+            } else {
+                overlay.style.display = 'flex';
+            }
+        }
+
+        function hideLoading() {
+            const overlay = document.getElementById('loading-overlay');
+            if (overlay) {
+                overlay.style.display = 'none';
+            }
+        }
+
+        // Create particle effect for wins
+        function createParticles(element) {
+            const rect = element.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.position = 'fixed';
+                particle.style.width = '10px';
+                particle.style.height = '10px';
+                particle.style.borderRadius = '50%';
+                particle.style.backgroundColor = getRandomColor();
+                particle.style.left = centerX + 'px';
+                particle.style.top = centerY + 'px';
+                particle.style.pointerEvents = 'none';
+                particle.style.zIndex = '9999';
+                
+                document.body.appendChild(particle);
+                
+                const angle = Math.random() * Math.PI * 2;
+                const speed = 2 + Math.random() * 3;
+                const distance = 50 + Math.random() * 100;
+                
+                const destinationX = centerX + Math.cos(angle) * distance;
+                const destinationY = centerY + Math.sin(angle) * distance;
+                
+                // Animate
+                particle.animate([
+                    { transform: 'translate(0, 0) scale(1)', opacity: 1 },
+                    { transform: `translate(${destinationX - centerX}px, ${destinationY - centerY}px) scale(0)`, opacity: 0 }
+                ], {
+                    duration: 1000 + Math.random() * 1000,
+                    easing: 'cubic-bezier(0, .9, .57, 1)',
+                    fill: 'forwards'
+                });
+                
+                // Remove particle after animation
+                setTimeout(() => {
+                    particle.remove();
+                }, 2000);
+            }
+        }
+
+        function getRandomColor() {
+            const colors = [
+                '#00d4ff', // accent-primary
+                '#7c3aed', // accent-secondary
+                '#10b981', // accent-success
+                '#f59e0b'  // accent-warning
+            ];
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+    </script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>
